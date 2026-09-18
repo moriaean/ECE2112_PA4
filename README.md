@@ -81,10 +81,7 @@ ECE_BE_2['Average'] = (
 
 ### Average Formula
 
-\[
-\text{Average} =
-\frac{\text{Math}+\text{Electronics}+\text{GEAS}+\text{Communication}}{4}
-\]
+Average = (Math + Electronics+ GEAS + Communication) / 4
 
 This derived column is then used in Problems A, B, and C.
 
@@ -113,13 +110,13 @@ The solution uses **Boolean indexing** with two conditions joined by the `&` ope
 
 ```python
 VisComm = ECE_BE_2[
-    (ECE_BE_2['Hometown'] == 'Visayas') &
-    (ECE_BE_2['Track'] == 'Communication')
-][['Name', 'Gender', 'Math', 'Electronics', 'Average']]
+            (ECE_BE_2['Hometown'] == 'Visayas') & 
+             (ECE_BE_2['Track'] == 'Communication')
+             ][['Name', 'Gender', 'Math', 'Electronics', 'Average']]
 
-display(VisComm)
+display (VisComm)
 
-print("Number of rows:", len(VisComm))
+print ("Number of rows:", len (VisComm))
 ```
 
 ### How the Code Works
@@ -168,18 +165,20 @@ After creating `VisFemale`, display only the records whose `Average` is at least
 The solution again uses **Boolean indexing**, but the second filtering operation is applied to the already-created `VisFemale` DataFrame.
 
 ```python
+ECE_BE_2 ['Average'] = ((ECE_BE_2.Math + ECE_BE_2.Electronics + ECE_BE_2.GEAS + ECE_BE_2.Communication)/4)
 VisFemale = ECE_BE_2[
-    (ECE_BE_2['Hometown'] == 'Visayas') &
-    (ECE_BE_2['Gender'] == 'Female')
-][['Name', 'Track', 'GEAS', 'Electronics', 'Average']]
+            (ECE_BE_2['Hometown'] == 'Visayas') & 
+             (ECE_BE_2['Gender'] == 'Female')
+             ][['Name', 'Track', 'GEAS', 'Electronics', 'Average']]
 
-display(VisFemale)
-print("Number of rows:", len(VisFemale))
 
-VisFemale_60 = VisFemale[VisFemale['Average'] >= 60]
+print ("\n\033[1m" + "\t    Female Takers from Visayas" + "\033[0m")
+display (VisFemale)
+print ("Number of rows:", len (VisFemale))
 
-display(VisFemale_60)
-print("Number of rows:", len(VisFemale_60))
+print ("\n\033[1m" + "Female Takers from Visayas with Greater than 60 Average" + "\033[0m")
+display (VisFemale[VisFemale['Average'] >= 60])
+print ("Number of rows:", len (VisFemale[VisFemale['Average'] >= 60]))
 ```
 
 ### How the Code Works
@@ -244,23 +243,11 @@ The task requires:
 The solution uses Pandas `groupby()` and `mean()` to calculate the category-level averages.
 
 ```python
-mean_track = (
-    ECE_BE_2.groupby('Track')['Average']
-    .mean()
-    .reset_index()
-)
+mean_track = pd.DataFrame(ECE_BE_2.groupby(['Track'])['Average'].mean().reset_index())
 
-mean_gender = (
-    ECE_BE_2.groupby('Gender')['Average']
-    .mean()
-    .reset_index()
-)
+mean_gender = pd.DataFrame(ECE_BE_2.groupby(['Gender'])['Average'].mean().reset_index())
 
-mean_hometown = (
-    ECE_BE_2.groupby('Hometown')['Average']
-    .mean()
-    .reset_index()
-)
+mean_hometown = pd.DataFrame(ECE_BE_2.groupby(['Hometown'])['Average'].mean().reset_index())
 ```
 
 ### Test Case 1: Mean Average by Track
@@ -297,35 +284,17 @@ The highest observed sample mean in the Hometown summary is **Luzon: 68.083333**
 A figure with three separate bar charts can be produced as follows:
 
 ```python
-fig, axes = plt.subplots(1, 3, figsize=(20, 6))
+plt.figure(figsize=(20, 8))
+plt.ylim(0, 100)
+plt.title("Mean Average by Track                                                          Mean Average by Gender                                                    Mean Average by Hometown")
+mean_track_graph = plt.bar(mean_track['Track'], mean_track['Average'])
+plt.bar_label(mean_track_graph, label_type='edge')
 
-# Mean Average by Track
-bars = axes[0].bar(mean_track['Track'], mean_track['Average'])
-axes[0].set_title('Mean Average by Track')
-axes[0].set_xlabel('Track')
-axes[0].set_ylabel('Mean Average')
-axes[0].set_ylim(0, 100)
-axes[0].tick_params(axis='x', rotation=20)
-axes[0].bar_label(bars, fmt='%.2f')
+mean_gender_graph = plt.bar(mean_gender['Gender'], mean_gender['Average'])
+plt.bar_label(mean_gender_graph, label_type='edge')
 
-# Mean Average by Gender
-bars = axes[1].bar(mean_gender['Gender'], mean_gender['Average'])
-axes[1].set_title('Mean Average by Gender')
-axes[1].set_xlabel('Gender')
-axes[1].set_ylabel('Mean Average')
-axes[1].set_ylim(0, 100)
-axes[1].bar_label(bars, fmt='%.2f')
-
-# Mean Average by Hometown
-bars = axes[2].bar(mean_hometown['Hometown'], mean_hometown['Average'])
-axes[2].set_title('Mean Average by Hometown')
-axes[2].set_xlabel('Hometown')
-axes[2].set_ylabel('Mean Average')
-axes[2].set_ylim(0, 100)
-axes[2].bar_label(bars, fmt='%.2f')
-
-plt.tight_layout()
-plt.show()
+mean_hometown_graph = plt.bar(mean_hometown['Hometown'], mean_hometown['Average'])
+plt.bar_label(mean_hometown_graph, label_type='edge')
 ```
 
 ### Interpretation
@@ -354,7 +323,6 @@ These statements describe the observed dataset only. They do **not** establish t
 | `groupby()` | Groups records according to a categorical feature. |
 | `mean()` | Calculates the arithmetic mean of `Average` for each group. |
 | `reset_index()` | Converts grouped results back into a regular DataFrame structure. |
-| `plt.subplots()` | Creates multiple plots within one figure. |
 | `plt.bar()` | Creates bar charts for category comparisons. |
 | `set_ylim()` | Keeps the visualization on a consistent 0–100 scale. |
 | `bar_label()` | Displays the numerical value on each bar. |
@@ -364,14 +332,8 @@ These statements describe the observed dataset only. They do **not** establish t
 # VI. Constraints and Compliance Checklist
 
 - [x] **Dataset-derived results:** All DataFrame rows, category means, and plotted values are derived from `board2.csv`.
-- [x] **Explicit multiple conditions:** Problems A and B explicitly apply both categorical conditions using `&`.
-- [x] **Required column selection:** Only the requested columns are retained for `VisComm` and `VisFemale`.
-- [x] **Original data preservation:** Filtering creates separate DataFrames rather than manually rewriting records.
 - [x] **No manual category means:** The category means are calculated using Pandas `groupby()` and `mean()`.
-- [x] **Separate numerical filtering:** The `Average >= 60` filter does not overwrite `VisFemale`.
-- [x] **Visualization scale:** The bar charts use a consistent `0–100` scale appropriate for the average scores.
-- [x] **Readable labels:** Each chart has a title, axis labels, and category labels.
-- [x] **Observed-data interpretation:** The conclusions are limited to sample mean differences and do not claim causation.
+- [x] **Visualization scale:** The bar charts use a consistent `0–100` scale appropriate for the average scores for board exams.
 
 ---
 
@@ -429,7 +391,3 @@ Run all cells from top to bottom. The notebook should generate:
 | **C. Track Mean** | Communication — 67.975 |
 | **C. Gender Mean** | Male — 67.183333 |
 | **C. Hometown Mean** | Luzon — 68.083333 |
-
----
-
-## End of Experiment 4
