@@ -297,6 +297,8 @@ mean_hometown_graph = plt.bar(mean_hometown['Hometown'], mean_hometown['Average'
 plt.bar_label(mean_hometown_graph, label_type='edge')
 ```
 
+<img width="1603" height="678" alt="image" src="https://github.com/user-attachments/assets/db3c3d64-50b5-45e1-bccd-275ae6d98254" />
+
 ### Interpretation
 
 Based strictly on the sample used in the dataset:
